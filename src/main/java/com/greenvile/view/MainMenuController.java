@@ -1,3 +1,9 @@
+/* a bunch of liseners, it looks for button presses. Basically alsmost every
+class in the view layer is the same
+when writing the project we should spend least ammount of time on this 
+Appart from saying that everything was dumbed the fuck down for bob to understand. Each class just
+Listens for a bunch of button presses and calls them and boom you are technically no longer in any of the clases */
+
 package com.greenvile.view;
 
 import com.greenvile.viewmodel.*;
@@ -72,22 +78,6 @@ public class MainMenuController {
             controller.setMainViewModel(mainViewModel);
             Stage stage = new Stage();
             stage.setTitle("Trades");
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    private void openPointManagement() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/greenvile/fxml/PointManagementView.fxml"));
-            Parent root = loader.load();
-            PointManagementController controller = loader.getController();
-            controller.setMainViewModel(mainViewModel);
-            Stage stage = new Stage();
-            stage.setTitle("Point Management");
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {

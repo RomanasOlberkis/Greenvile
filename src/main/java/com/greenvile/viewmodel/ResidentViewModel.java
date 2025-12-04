@@ -1,3 +1,7 @@
+/*does crud for our residents. Crud if u forgor is the Create, Read Update and delete. 
+This is also were we generate the ID for residents automatically.
+ We never see it but its there and app knows it. 
+ Other words dont fuck with this class too muuch */
 package com.greenvile.viewmodel;
 
 import com.greenvile.model.*;

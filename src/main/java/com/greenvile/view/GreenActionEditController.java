@@ -8,16 +8,15 @@ import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class GreenActionEditController {
     @FXML private TextField titleField;
     @FXML private TextArea descriptionArea;
     @FXML private TextField pointsField;
     @FXML private TextField pictureField;
-    @FXML private ListView<Resident> participantListView;
+    @FXML private ComboBox<Resident> participantCombo;
     @FXML private Button saveButton;
+    @FXML private Label errorLabel;
 
     private GreenActionViewModel greenActionViewModel;
     private GreenAction action;
@@ -38,10 +37,10 @@ public class GreenActionEditController {
             pointsField.setText(String.valueOf(action.getPointsAwarded()));
             pictureField.setText(action.getPicturePath());
 
-            for (int i = 0; i < participantListView.getItems().size(); i++) {
-                Resident r = participantListView.getItems().get(i);
-                if (action.getParticipantIds().contains(r.getId())) {
-                    participantListView.getSelectionModel().select(i);
+            for (Resident r : participantCombo.getItems()) {
+                if (r.getId() == action.getParticipantId()) {
+                    participantCombo.getSelectionModel().select(r);
+                    break;
                 }
             }
         }
@@ -49,21 +48,45 @@ public class GreenActionEditController {
 
     @FXML
     private void initialize() {
-        participantListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         saveButton.setDisable(true);
+        errorLabel.setText("");
+
+        pointsField.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal.matches("\\d*")) {
+                pointsField.setText(oldVal);
+            }
+            checkChanges();
+        });
 
         titleField.textProperty().addListener((obs, oldVal, newVal) -> checkChanges());
         descriptionArea.textProperty().addListener((obs, oldVal, newVal) -> checkChanges());
-        pointsField.textProperty().addListener((obs, oldVal, newVal) -> checkChanges());
         pictureField.textProperty().addListener((obs, oldVal, newVal) -> checkChanges());
     }
 
     private void loadResidents() {
-        participantListView.getItems().addAll(greenActionViewModel.getAllResidents());
+        participantCombo.getItems().addAll(greenActionViewModel.getAllResidents());
     }
 
     private void checkChanges() {
-        saveButton.setDisable(titleField.getText().isEmpty());
+        boolean titleValid = !titleField.getText().trim().isEmpty();
+        boolean descValid = !descriptionArea.getText().trim().isEmpty();
+        boolean pointsValid = false;
+        
+        try {
+            int pts = Integer.parseInt(pointsField.getText().trim());
+            pointsValid = pts > 0;
+        } catch (NumberFormatException e) {
+            pointsValid = false;
+        }
+        
+        if (!titleValid || !descValid || !pointsValid) {
+            errorLabel.setText("Title, Description, and Points (>0) are required");
+            saveButton.setDisable(true);
+            return;
+        }
+        
+        errorLabel.setText("");
+        saveButton.setDisable(false);
     }
 
     @FXML
@@ -79,34 +102,30 @@ public class GreenActionEditController {
 
     @FXML
     private void onSave() {
-        int points = 0;
-        try {
-            points = Integer.parseInt(pointsField.getText());
-        } catch (NumberFormatException e) {
-            points = 0;
-        }
+        int points = Integer.parseInt(pointsField.getText().trim());
 
-        List<Integer> selectedParticipants = new ArrayList<>();
-        for (Resident r : participantListView.getSelectionModel().getSelectedItems()) {
-            selectedParticipants.add(r.getId());
+        int participantId = 0;
+        Resident selectedResident = participantCombo.getSelectionModel().getSelectedItem();
+        if (selectedResident != null) {
+            participantId = selectedResident.getId();
         }
 
         if (isNewAction) {
             GreenAction newAction = new GreenAction(
                 0,
-                titleField.getText(),
-                descriptionArea.getText(),
-                pictureField.getText(),
+                titleField.getText().trim(),
+                descriptionArea.getText().trim(),
+                pictureField.getText().trim(),
                 points
             );
-            newAction.setParticipantIds(selectedParticipants);
+            newAction.setParticipantId(participantId);
             greenActionViewModel.addAction(newAction);
         } else {
-            action.setTitle(titleField.getText());
-            action.setDescription(descriptionArea.getText());
+            action.setTitle(titleField.getText().trim());
+            action.setDescription(descriptionArea.getText().trim());
             action.setPointsAwarded(points);
-            action.setPicturePath(pictureField.getText());
-            action.setParticipantIds(selectedParticipants);
+            action.setPicturePath(pictureField.getText().trim());
+            action.setParticipantId(participantId);
             greenActionViewModel.updateAction(action);
         }
 

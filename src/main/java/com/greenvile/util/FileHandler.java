@@ -1,3 +1,7 @@
+/* seems big scary and booga wooga black magic go but its simple af
+A bunch of renamed edited coppuy pasted lines
+its just a class that handles the text writing to file
+If you are confused by this class let me know, Ill make sure to explain it to you  */
 package com.greenvile.util;
 
 import com.greenvile.model.*;
@@ -13,40 +17,44 @@ public class FileHandler {
         try {
             PrintWriter writer = new PrintWriter(new FileWriter(dataFilePath));
             
-            writer.println("POINT_SETTINGS");
-            writer.println(data.getPointSettings().getResetFrequency());
-            writer.println(data.getPointSettings().getLastResetDate());
+            writer.println("COMMUNAL_POOL");
             writer.println(data.getCommunalPointsPool());
-            writer.println("END_POINT_SETTINGS");
+            writer.println("END_COMMUNAL_POOL");
             
             writer.println("RESIDENTS");
             for (Resident r : data.getResidents()) {
                 writer.println(r.getId() + "|" + r.getFullName() + "|" + r.getPhoneNumber() + "|" + 
-                    r.getEmail() + "|" + r.getAddress() + "|" + r.getPicturePath() + "|" + r.getPersonalPoints());
+                    r.getEmail() + "|" + r.getAddress() + "|" + r.getPersonalPoints() + "|" + r.getLastTaskCompletionDate());
             }
             writer.println("END_RESIDENTS");
             
             writer.println("GREEN_ACTIONS");
             for (GreenAction a : data.getGreenActions()) {
-                String participants = "";
-                for (int i = 0; i < a.getParticipantIds().size(); i++) {
-                    participants += a.getParticipantIds().get(i);
-                    if (i < a.getParticipantIds().size() - 1) {
-                        participants += ",";
-                    }
-                }
                 writer.println(a.getId() + "|" + a.getTitle() + "|" + a.getDescription() + "|" + 
-                    a.getPicturePath() + "|" + a.getPointsAwarded() + "|" + a.isDisplayOnWebsite() + "|" + participants);
+                    a.getPicturePath() + "|" + a.getPointsAwarded() + "|" + a.isDisplayOnWebsite() + "|" + a.getParticipantId());
             }
             writer.println("END_GREEN_ACTIONS");
+            
+            writer.println("DEFAULT_TASKS");
+            for (CommunalTask t : data.getDefaultTasks()) {
+                writer.println(t.getId() + "|" + t.getTitle() + "|" + t.getDescription() + "|" + t.getPointsAwarded());
+            }
+            writer.println("END_DEFAULT_TASKS");
             
             writer.println("COMMUNAL_GOALS");
             for (CommunalGoal g : data.getCommunalGoals()) {
                 writer.println("GOAL|" + g.getId() + "|" + g.getTitle() + "|" + g.getDescription() + "|" + 
-                    g.getPointsNeeded() + "|" + g.getCurrentPoints() + "|" + g.isCompleted());
+                    g.getPointsNeeded() + "|" + g.getCurrentPoints() + "|" + g.isCompleted() + "|" + g.isActive());
                 for (CommunalTask t : g.getTasks()) {
+                    String participants = "";
+                    for (int i = 0; i < t.getParticipantIds().size(); i++) {
+                        participants += t.getParticipantIds().get(i);
+                        if (i < t.getParticipantIds().size() - 1) {
+                            participants += ",";
+                        }
+                    }
                     writer.println("TASK|" + t.getId() + "|" + t.getTitle() + "|" + t.getDescription() + "|" + 
-                        t.getPointsAwarded() + "|" + t.isCompleted() + "|" + t.isDisplayOnWebsite());
+                        t.getPointsAwarded() + "|" + t.isCompleted() + "|" + t.isDisplayOnWebsite() + "|" + participants);
                 }
             }
             writer.println("END_COMMUNAL_GOALS");
@@ -55,7 +63,7 @@ public class FileHandler {
             for (Trade t : data.getTrades()) {
                 writer.println(t.getId() + "|" + t.getTitle() + "|" + t.getDescription() + "|" + 
                     t.getPicturePath() + "|" + t.getPointsCost() + "|" + t.getResidentId() + "|" + 
-                    t.isCompleted() + "|" + t.isDisplayOnWebsite());
+                    t.isCompleted() + "|" + t.isDisplayOnWebsite() + "|" + t.getBuyerId());
             }
             writer.println("END_TRADES");
             
@@ -63,6 +71,24 @@ public class FileHandler {
         } catch (IOException e) {
             System.out.println("Error saving data: " + e.getMessage());
         }
+    }
+
+    private int parseIntSafe(String s) {
+        if (s == null || s.trim().isEmpty()) {
+            return 0;
+        }
+        try {
+            return Integer.parseInt(s.trim());
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    private boolean parseBoolSafe(String s) {
+        if (s == null || s.trim().isEmpty()) {
+            return false;
+        }
+        return Boolean.parseBoolean(s.trim());
     }
 
     public DataManager loadData() {
@@ -80,17 +106,17 @@ public class FileHandler {
             CommunalGoal currentGoal = null;
             
             while ((line = reader.readLine()) != null) {
-                if (line.equals("POINT_SETTINGS")) {
-                    section = "POINT_SETTINGS";
-                    String frequency = reader.readLine();
-                    String lastReset = reader.readLine();
-                    int pool = Integer.parseInt(reader.readLine());
-                    data.setPointSettings(new PointSettings(frequency, lastReset));
+                if (line.equals("COMMUNAL_POOL")) {
+                    section = "COMMUNAL_POOL";
+                    String poolLine = reader.readLine();
+                    int pool = parseIntSafe(poolLine);
                     data.setCommunalPointsPool(pool);
                 } else if (line.equals("RESIDENTS")) {
                     section = "RESIDENTS";
                 } else if (line.equals("GREEN_ACTIONS")) {
                     section = "GREEN_ACTIONS";
+                } else if (line.equals("DEFAULT_TASKS")) {
+                    section = "DEFAULT_TASKS";
                 } else if (line.equals("COMMUNAL_GOALS")) {
                     section = "COMMUNAL_GOALS";
                 } else if (line.equals("TRADES")) {
@@ -100,70 +126,118 @@ public class FileHandler {
                     currentGoal = null;
                 } else if (section.equals("RESIDENTS") && !line.isEmpty()) {
                     String[] parts = line.split("\\|", -1);
-                    Resident r = new Resident(
-                        Integer.parseInt(parts[0]),
-                        parts[1],
-                        parts[2],
-                        parts[3],
-                        parts[4],
-                        parts[5],
-                        Integer.parseInt(parts[6])
-                    );
-                    data.getResidents().add(r);
+                    if (parts.length >= 6) {
+                        Resident r = new Resident(
+                            parseIntSafe(parts[0]),
+                            parts[1],
+                            parts[2],
+                            parts[3],
+                            parts[4],
+                            parseIntSafe(parts[5])
+                        );
+                        if (parts.length > 6) {
+                            r.setLastTaskCompletionDate(parts[6]);
+                        }
+                        data.getResidents().add(r);
+                    }
                 } else if (section.equals("GREEN_ACTIONS") && !line.isEmpty()) {
                     String[] parts = line.split("\\|", -1);
-                    GreenAction a = new GreenAction(
-                        Integer.parseInt(parts[0]),
-                        parts[1],
-                        parts[2],
-                        parts[3],
-                        Integer.parseInt(parts[4])
-                    );
-                    a.setDisplayOnWebsite(Boolean.parseBoolean(parts[5]));
-                    if (parts.length > 6 && !parts[6].isEmpty()) {
-                        String[] pIds = parts[6].split(",");
-                        for (String pid : pIds) {
-                            a.addParticipant(Integer.parseInt(pid));
+                    if (parts.length >= 5) {
+                        GreenAction a = new GreenAction(
+                            parseIntSafe(parts[0]),
+                            parts[1],
+                            parts[2],
+                            parts[3],
+                            parseIntSafe(parts[4])
+                        );
+                        if (parts.length > 5) {
+                            a.setDisplayOnWebsite(parseBoolSafe(parts[5]));
                         }
+                        if (parts.length > 6 && !parts[6].isEmpty()) {
+                            a.setParticipantId(parseIntSafe(parts[6]));
+                        }
+                        data.getGreenActions().add(a);
                     }
-                    data.getGreenActions().add(a);
+                } else if (section.equals("DEFAULT_TASKS") && !line.isEmpty()) {
+                    String[] parts = line.split("\\|", -1);
+                    if (parts.length >= 4) {
+                        CommunalTask t = new CommunalTask(
+                            parseIntSafe(parts[0]),
+                            parts[1],
+                            parts[2],
+                            parseIntSafe(parts[3])
+                        );
+                        data.getDefaultTasks().add(t);
+                    }
                 } else if (section.equals("COMMUNAL_GOALS") && !line.isEmpty()) {
                     if (line.startsWith("GOAL|")) {
                         String[] parts = line.substring(5).split("\\|", -1);
-                        currentGoal = new CommunalGoal(
-                            Integer.parseInt(parts[0]),
-                            parts[1],
-                            parts[2],
-                            Integer.parseInt(parts[3])
-                        );
-                        currentGoal.setCurrentPoints(Integer.parseInt(parts[4]));
-                        currentGoal.setCompleted(Boolean.parseBoolean(parts[5]));
-                        data.getCommunalGoals().add(currentGoal);
+                        if (parts.length >= 4) {
+                            currentGoal = new CommunalGoal(
+                                parseIntSafe(parts[0]),
+                                parts[1],
+                                parts[2],
+                                parseIntSafe(parts[3])
+                            );
+                            if (parts.length > 4) {
+                                currentGoal.setCurrentPoints(parseIntSafe(parts[4]));
+                            }
+                            if (parts.length > 5) {
+                                currentGoal.setCompleted(parseBoolSafe(parts[5]));
+                            }
+                            if (parts.length > 6) {
+                                currentGoal.setActive(parseBoolSafe(parts[6]));
+                            }
+                            data.getCommunalGoals().add(currentGoal);
+                        }
                     } else if (line.startsWith("TASK|") && currentGoal != null) {
                         String[] parts = line.substring(5).split("\\|", -1);
-                        CommunalTask t = new CommunalTask(
-                            Integer.parseInt(parts[0]),
-                            parts[1],
-                            parts[2],
-                            Integer.parseInt(parts[3])
-                        );
-                        t.setCompleted(Boolean.parseBoolean(parts[4]));
-                        t.setDisplayOnWebsite(Boolean.parseBoolean(parts[5]));
-                        currentGoal.addTask(t);
+                        if (parts.length >= 4) {
+                            CommunalTask t = new CommunalTask(
+                                parseIntSafe(parts[0]),
+                                parts[1],
+                                parts[2],
+                                parseIntSafe(parts[3])
+                            );
+                            if (parts.length > 4) {
+                                t.setCompleted(parseBoolSafe(parts[4]));
+                            }
+                            if (parts.length > 5) {
+                                t.setDisplayOnWebsite(parseBoolSafe(parts[5]));
+                            }
+                            if (parts.length > 6 && !parts[6].isEmpty()) {
+                                String[] pIds = parts[6].split(",");
+                                for (String pid : pIds) {
+                                    if (!pid.trim().isEmpty()) {
+                                        t.addParticipant(parseIntSafe(pid));
+                                    }
+                                }
+                            }
+                            currentGoal.addTask(t);
+                        }
                     }
                 } else if (section.equals("TRADES") && !line.isEmpty()) {
                     String[] parts = line.split("\\|", -1);
-                    Trade t = new Trade(
-                        Integer.parseInt(parts[0]),
-                        parts[1],
-                        parts[2],
-                        parts[3],
-                        Integer.parseInt(parts[4]),
-                        Integer.parseInt(parts[5])
-                    );
-                    t.setCompleted(Boolean.parseBoolean(parts[6]));
-                    t.setDisplayOnWebsite(Boolean.parseBoolean(parts[7]));
-                    data.getTrades().add(t);
+                    if (parts.length >= 6) {
+                        Trade t = new Trade(
+                            parseIntSafe(parts[0]),
+                            parts[1],
+                            parts[2],
+                            parts[3],
+                            parseIntSafe(parts[4]),
+                            parseIntSafe(parts[5])
+                        );
+                        if (parts.length > 6) {
+                            t.setCompleted(parseBoolSafe(parts[6]));
+                        }
+                        if (parts.length > 7) {
+                            t.setDisplayOnWebsite(parseBoolSafe(parts[7]));
+                        }
+                        if (parts.length > 8) {
+                            t.setBuyerId(parseIntSafe(parts[8]));
+                        }
+                        data.getTrades().add(t);
+                    }
                 }
             }
             reader.close();
@@ -203,8 +277,14 @@ public class FileHandler {
             writer.println("  ],");
             
             writer.println("  \"communalGoals\": [");
-            for (int i = 0; i < data.getCommunalGoals().size(); i++) {
-                CommunalGoal g = data.getCommunalGoals().get(i);
+            List<CommunalGoal> activeGoals = new ArrayList<>();
+            for (CommunalGoal g : data.getCommunalGoals()) {
+                if (g.isActive() || g.isCompleted()) {
+                    activeGoals.add(g);
+                }
+            }
+            for (int i = 0; i < activeGoals.size(); i++) {
+                CommunalGoal g = activeGoals.get(i);
                 writer.println("    {");
                 writer.println("      \"title\": \"" + escapeJson(g.getTitle()) + "\",");
                 writer.println("      \"description\": \"" + escapeJson(g.getDescription()) + "\",");
@@ -233,7 +313,7 @@ public class FileHandler {
                 }
                 writer.println("      ]");
                 writer.print("    }");
-                if (i < data.getCommunalGoals().size() - 1) {
+                if (i < activeGoals.size() - 1) {
                     writer.println(",");
                 } else {
                     writer.println();

@@ -11,6 +11,7 @@ public class CommunalGoalEditController {
     @FXML private TextArea descriptionArea;
     @FXML private TextField pointsNeededField;
     @FXML private Button saveButton;
+    @FXML private Label errorLabel;
 
     private CommunalViewModel communalViewModel;
     private CommunalGoal goal;
@@ -34,6 +35,7 @@ public class CommunalGoalEditController {
     @FXML
     private void initialize() {
         saveButton.setDisable(true);
+        errorLabel.setText("");
 
         titleField.textProperty().addListener((obs, oldVal, newVal) -> checkChanges());
         descriptionArea.textProperty().addListener((obs, oldVal, newVal) -> checkChanges());
@@ -41,7 +43,17 @@ public class CommunalGoalEditController {
     }
 
     private void checkChanges() {
-        saveButton.setDisable(titleField.getText().isEmpty());
+        boolean titleValid = !titleField.getText().trim().isEmpty();
+        boolean descValid = !descriptionArea.getText().trim().isEmpty();
+        
+        if (!titleValid || !descValid) {
+            errorLabel.setText("Title and Description are required");
+            saveButton.setDisable(true);
+            return;
+        }
+        
+        errorLabel.setText("");
+        saveButton.setDisable(false);
     }
 
     @FXML
@@ -56,14 +68,14 @@ public class CommunalGoalEditController {
         if (isNewGoal) {
             CommunalGoal newGoal = new CommunalGoal(
                 0,
-                titleField.getText(),
-                descriptionArea.getText(),
+                titleField.getText().trim(),
+                descriptionArea.getText().trim(),
                 pointsNeeded
             );
             communalViewModel.addGoal(newGoal);
         } else {
-            goal.setTitle(titleField.getText());
-            goal.setDescription(descriptionArea.getText());
+            goal.setTitle(titleField.getText().trim());
+            goal.setDescription(descriptionArea.getText().trim());
             goal.setPointsNeeded(pointsNeeded);
             communalViewModel.updateGoal(goal);
         }

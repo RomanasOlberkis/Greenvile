@@ -1,3 +1,5 @@
+/* So this class is bacially this is our "Super class" it basically works in a way by saying I need alla these items in the code for the code to work Resident wise.  */
+
 package com.greenvile.model;
 
 public class Person {
@@ -6,7 +8,6 @@ public class Person {
     private String phoneNumber;
     private String email;
     private String address;
-    private String picturePath;
 
     public Person() {
         this.id = 0;
@@ -14,16 +15,14 @@ public class Person {
         this.phoneNumber = "";
         this.email = "";
         this.address = "";
-        this.picturePath = "";
     }
 
-    public Person(int id, String fullName, String phoneNumber, String email, String address, String picturePath) {
+    public Person(int id, String fullName, String phoneNumber, String email, String address) {
         this.id = id;
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.address = address;
-        this.picturePath = picturePath;
     }
 
     public int getId() {
@@ -64,14 +63,6 @@ public class Person {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public String getPicturePath() {
-        return picturePath;
-    }
-
-    public void setPicturePath(String picturePath) {
-        this.picturePath = picturePath;
     }
 
     public String toString() {

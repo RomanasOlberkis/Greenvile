@@ -3,12 +3,13 @@
 <?import javafx.scene.layout.*?>
 
 <VBox spacing="10" xmlns:fx="http://javafx.com/fxml" fx:controller="com.greenvile.view.CommunalGoalEditController">
+    <Label fx:id="errorLabel" style="-fx-text-fill: red;"/>
     <HBox spacing="10">
-        <Label text="Title:"/>
+        <Label text="Title:*"/>
         <TextField fx:id="titleField" prefWidth="200"/>
     </HBox>
     <VBox spacing="5">
-        <Label text="Description:"/>
+        <Label text="Description:*"/>
         <TextArea fx:id="descriptionArea" prefHeight="100"/>
     </VBox>
     <HBox spacing="10">

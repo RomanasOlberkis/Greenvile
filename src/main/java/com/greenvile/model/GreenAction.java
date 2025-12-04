@@ -1,7 +1,5 @@
+/* just another class to instantiate something. in this case we doing the green action. note that the points from it are dirrected to the communal goal. */
 package com.greenvile.model;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class GreenAction {
     private int id;
@@ -10,7 +8,7 @@ public class GreenAction {
     private String picturePath;
     private int pointsAwarded;
     private boolean displayOnWebsite;
-    private List<Integer> participantIds;
+    private int participantId;
 
     public GreenAction() {
         this.id = 0;
@@ -19,7 +17,7 @@ public class GreenAction {
         this.picturePath = "";
         this.pointsAwarded = 0;
         this.displayOnWebsite = false;
-        this.participantIds = new ArrayList<>();
+        this.participantId = 0;
     }
 
     public GreenAction(int id, String title, String description, String picturePath, int pointsAwarded) {
@@ -29,7 +27,7 @@ public class GreenAction {
         this.picturePath = picturePath;
         this.pointsAwarded = pointsAwarded;
         this.displayOnWebsite = false;
-        this.participantIds = new ArrayList<>();
+        this.participantId = 0;
     }
 
     public int getId() {
@@ -80,25 +78,19 @@ public class GreenAction {
         this.displayOnWebsite = displayOnWebsite;
     }
 
-    public List<Integer> getParticipantIds() {
-        return participantIds;
+    public int getParticipantId() {
+        return participantId;
     }
 
-    public void setParticipantIds(List<Integer> participantIds) {
-        this.participantIds = participantIds;
-    }
-
-    public void addParticipant(int residentId) {
-        if (!participantIds.contains(residentId)) {
-            participantIds.add(residentId);
-        }
-    }
-
-    public void removeParticipant(int residentId) {
-        participantIds.remove(Integer.valueOf(residentId));
+    public void setParticipantId(int participantId) {
+        this.participantId = participantId;
     }
 
     public String toString() {
-        return title;
+        String status = "";
+        if (displayOnWebsite) {
+            status = " [ACTIVE]";
+        }
+        return title + status;
     }
 }

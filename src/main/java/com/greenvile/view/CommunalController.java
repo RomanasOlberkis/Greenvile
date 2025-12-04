@@ -21,6 +21,7 @@ public class CommunalController {
     @FXML private Button updateGoalButton;
     @FXML private Button deleteGoalButton;
     @FXML private Button completeGoalButton;
+    @FXML private Button toggleActiveButton;
     @FXML private Button addTaskButton;
     @FXML private Button updateTaskButton;
     @FXML private Button deleteTaskButton;
@@ -41,6 +42,7 @@ public class CommunalController {
         updateGoalButton.setDisable(true);
         deleteGoalButton.setDisable(true);
         completeGoalButton.setDisable(true);
+        toggleActiveButton.setDisable(true);
         addTaskButton.setDisable(true);
         updateTaskButton.setDisable(true);
         deleteTaskButton.setDisable(true);
@@ -52,6 +54,7 @@ public class CommunalController {
             updateGoalButton.setDisable(!hasSelection);
             deleteGoalButton.setDisable(!hasSelection);
             completeGoalButton.setDisable(!hasSelection);
+            toggleActiveButton.setDisable(!hasSelection);
             addTaskButton.setDisable(!hasSelection);
             if (hasSelection) {
                 loadTasks(newVal);
@@ -120,6 +123,16 @@ public class CommunalController {
     }
 
     @FXML
+    private void onToggleActive() {
+        CommunalGoal selected = goalListView.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            communalViewModel.toggleGoalActive(selected.getId());
+            mainViewModel.saveAllData();
+            loadGoals();
+        }
+    }
+
+    @FXML
     private void onAddTask() {
         CommunalGoal selectedGoal = goalListView.getSelectionModel().getSelectedItem();
         if (selectedGoal != null) {
@@ -159,6 +172,14 @@ public class CommunalController {
         CommunalGoal selectedGoal = goalListView.getSelectionModel().getSelectedItem();
         CommunalTask selectedTask = taskListView.getSelectionModel().getSelectedItem();
         if (selectedGoal != null && selectedTask != null) {
+            if (!selectedTask.hasParticipants()) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Cannot Complete");
+                alert.setHeaderText("No Participants");
+                alert.setContentText("This task cannot be completed without at least one participant. Please update the task and add participants first.");
+                alert.showAndWait();
+                return;
+            }
             communalViewModel.markTaskCompleted(selectedGoal.getId(), selectedTask.getId());
             mainViewModel.saveAllData();
             loadGoals();
@@ -174,6 +195,23 @@ public class CommunalController {
             selectedTask.setDisplayOnWebsite(!selectedTask.isDisplayOnWebsite());
             mainViewModel.saveAllData();
             loadTasks(selectedGoal);
+        }
+    }
+
+    @FXML
+    private void onOpenDefaultTasks() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/greenvile/fxml/DefaultTasksView.fxml"));
+            Parent root = loader.load();
+            DefaultTasksController controller = loader.getController();
+            controller.setMainViewModel(mainViewModel);
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Default Tasks");
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

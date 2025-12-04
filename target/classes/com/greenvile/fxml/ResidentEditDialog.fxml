@@ -3,8 +3,9 @@
 <?import javafx.scene.layout.*?>
 
 <VBox spacing="10" xmlns:fx="http://javafx.com/fxml" fx:controller="com.greenvile.view.ResidentEditController">
+    <Label fx:id="errorLabel" style="-fx-text-fill: red;"/>
     <HBox spacing="10">
-        <Label text="Full Name:"/>
+        <Label text="Full Name:*"/>
         <TextField fx:id="fullNameField" prefWidth="200"/>
     </HBox>
     <HBox spacing="10">
@@ -16,17 +17,8 @@
         <TextField fx:id="emailField" prefWidth="200"/>
     </HBox>
     <HBox spacing="10">
-        <Label text="Address:"/>
+        <Label text="Address:*"/>
         <TextField fx:id="addressField" prefWidth="200"/>
-    </HBox>
-    <HBox spacing="10">
-        <Label text="Points:"/>
-        <TextField fx:id="pointsField" prefWidth="200"/>
-    </HBox>
-    <HBox spacing="10">
-        <Label text="Picture:"/>
-        <TextField fx:id="pictureField" prefWidth="150"/>
-        <Button text="Browse" onAction="#onBrowsePicture"/>
     </HBox>
     <HBox spacing="10">
         <Button fx:id="saveButton" text="Save" onAction="#onSave"/>

@@ -1,3 +1,5 @@
+/*does some stuff like check if the person got enough points to buy a trade
+also does the deduction math. */
 package com.greenvile.viewmodel;
 
 import com.greenvile.model.*;
@@ -32,13 +34,32 @@ public class TradeViewModel {
         dataManager.getTrades().removeIf(t -> t.getId() == id);
     }
 
-    public void markCompleted(int id) {
+    public boolean completeTrade(int tradeId, int buyerId) {
         for (Trade t : dataManager.getTrades()) {
-            if (t.getId() == id) {
+            if (t.getId() == tradeId) {
+                Resident buyer = dataManager.getResidentById(buyerId);
+                Resident seller = dataManager.getResidentById(t.getResidentId());
+                
+                if (buyer == null) {
+                    return false;
+                }
+                
+                if (buyer.getPersonalPoints() < t.getPointsCost()) {
+                    return false;
+                }
+                
+                buyer.deductPoints(t.getPointsCost());
+                
+                if (seller != null) {
+                    seller.addPoints(t.getPointsCost());
+                }
+                
+                t.setBuyerId(buyerId);
                 t.setCompleted(true);
-                break;
+                return true;
             }
         }
+        return false;
     }
 
     public void toggleWebsiteDisplay(int id) {
@@ -52,5 +73,9 @@ public class TradeViewModel {
 
     public List<Resident> getAllResidents() {
         return dataManager.getResidents();
+    }
+
+    public Resident getResidentById(int id) {
+        return dataManager.getResidentById(id);
     }
 }

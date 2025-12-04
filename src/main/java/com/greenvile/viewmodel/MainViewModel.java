@@ -1,8 +1,9 @@
+/*/ this shit lests classes to talk with one another, or like a middle man. Other view models have to go through here to work properly, otherwise we would not be saving shit in our app */
+
 package com.greenvile.viewmodel;
 
 import com.greenvile.model.*;
 import com.greenvile.util.FileHandler;
-import java.time.LocalDate;
 
 public class MainViewModel {
     private DataManager dataManager;
@@ -11,7 +12,6 @@ public class MainViewModel {
     public MainViewModel() {
         this.fileHandler = new FileHandler();
         this.dataManager = fileHandler.loadData();
-        checkPointReset();
     }
 
     public DataManager getDataManager() {
@@ -21,21 +21,5 @@ public class MainViewModel {
     public void saveAllData() {
         fileHandler.saveData(dataManager);
         fileHandler.exportToWebsite(dataManager);
-    }
-
-    public void checkPointReset() {
-        if (dataManager.getPointSettings().isResetDue()) {
-            performPointReset();
-        }
-    }
-
-    public void performPointReset() {
-        int totalPoints = 0;
-        for (Resident r : dataManager.getResidents()) {
-            totalPoints += r.resetPoints();
-        }
-        dataManager.addToCommunalPool(totalPoints);
-        dataManager.getPointSettings().setLastResetDate(LocalDate.now().toString());
-        saveAllData();
     }
 }

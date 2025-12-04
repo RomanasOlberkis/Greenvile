@@ -1,5 +1,6 @@
 package com.greenvile.view;
 
+import com.greenvile.model.Resident;
 import com.greenvile.model.Trade;
 import com.greenvile.viewmodel.*;
 import javafx.collections.FXCollections;
@@ -41,7 +42,7 @@ public class TradeController {
             boolean hasSelection = newVal != null;
             updateButton.setDisable(!hasSelection);
             deleteButton.setDisable(!hasSelection);
-            completeButton.setDisable(!hasSelection);
+            completeButton.setDisable(!hasSelection || (newVal != null && newVal.isCompleted()));
             toggleDisplayButton.setDisable(!hasSelection);
         });
     }
@@ -84,10 +85,71 @@ public class TradeController {
     @FXML
     private void onComplete() {
         Trade selected = tradeListView.getSelectionModel().getSelectedItem();
-        if (selected != null) {
-            tradeViewModel.markCompleted(selected.getId());
-            mainViewModel.saveAllData();
-            loadTrades();
+        if (selected != null && !selected.isCompleted()) {
+            Dialog<Resident> dialog = new Dialog<>();
+            dialog.setTitle("Select Buyer");
+            dialog.setHeaderText("Select who is buying this trade\nCost: " + selected.getPointsCost() + " points");
+
+            ButtonType confirmButtonType = new ButtonType("Complete", ButtonBar.ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, ButtonType.CANCEL);
+
+            ComboBox<Resident> buyerCombo = new ComboBox<>();
+            buyerCombo.getItems().addAll(tradeViewModel.getAllResidents());
+            buyerCombo.setPromptText("Select buyer...");
+
+            Label errorLabel = new Label();
+            errorLabel.setStyle("-fx-text-fill: red;");
+
+            javafx.scene.layout.VBox content = new javafx.scene.layout.VBox(10);
+            content.getChildren().addAll(new Label("Buyer:"), buyerCombo, errorLabel);
+            dialog.getDialogPane().setContent(content);
+
+            Button confirmButton = (Button) dialog.getDialogPane().lookupButton(confirmButtonType);
+            confirmButton.setDisable(true);
+
+            buyerCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
+                if (newVal != null) {
+                    if (newVal.getPersonalPoints() < selected.getPointsCost()) {
+                        errorLabel.setText("Not enough points! Has: " + newVal.getPersonalPoints());
+                        confirmButton.setDisable(true);
+                    } else if (newVal.getId() == selected.getResidentId()) {
+                        errorLabel.setText("Buyer cannot be the seller!");
+                        confirmButton.setDisable(true);
+                    } else {
+                        errorLabel.setText("");
+                        confirmButton.setDisable(false);
+                    }
+                } else {
+                    confirmButton.setDisable(true);
+                }
+            });
+
+            dialog.setResultConverter(dialogButton -> {
+                if (dialogButton == confirmButtonType) {
+                    return buyerCombo.getValue();
+                }
+                return null;
+            });
+
+            Optional<Resident> result = dialog.showAndWait();
+            result.ifPresent(buyer -> {
+                boolean success = tradeViewModel.completeTrade(selected.getId(), buyer.getId());
+                if (success) {
+                    mainViewModel.saveAllData();
+                    loadTrades();
+                    Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                    successAlert.setTitle("Trade Complete");
+                    successAlert.setHeaderText("Trade completed successfully!");
+                    successAlert.setContentText(buyer.getFullName() + " bought " + selected.getTitle() + " for " + selected.getPointsCost() + " points.");
+                    successAlert.showAndWait();
+                } else {
+                    Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                    errorAlert.setTitle("Error");
+                    errorAlert.setHeaderText("Trade failed");
+                    errorAlert.setContentText("Could not complete the trade.");
+                    errorAlert.showAndWait();
+                }
+            });
         }
     }
 

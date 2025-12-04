@@ -1,3 +1,6 @@
+/* So after monday when we figured out how the points work I changed it a bit.
+I've made it so that if lets say 2 or more tasks are active both of them recieve same ammount of points
+from the green action but should work as bob wanted to */
 package com.greenvile.viewmodel;
 
 import com.greenvile.model.*;
@@ -17,7 +20,15 @@ public class GreenActionViewModel {
     public void addAction(GreenAction action) {
         action.setId(dataManager.generateNewGreenActionId());
         dataManager.getGreenActions().add(action);
-        awardPointsToParticipants(action);
+        distributePointsToActiveGoals(action.getPointsAwarded());
+    }
+
+    private void distributePointsToActiveGoals(int points) {
+        for (CommunalGoal goal : dataManager.getCommunalGoals()) {
+            if (goal.isActive() && !goal.isCompleted()) {
+                goal.addPoints(points);
+            }
+        }
     }
 
     public void updateAction(GreenAction action) {
@@ -38,15 +49,6 @@ public class GreenActionViewModel {
             if (a.getId() == id) {
                 a.setDisplayOnWebsite(!a.isDisplayOnWebsite());
                 break;
-            }
-        }
-    }
-
-    public void awardPointsToParticipants(GreenAction action) {
-        for (int residentId : action.getParticipantIds()) {
-            Resident r = dataManager.getResidentById(residentId);
-            if (r != null) {
-                r.addPoints(action.getPointsAwarded());
             }
         }
     }

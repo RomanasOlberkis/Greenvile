@@ -16,6 +16,7 @@ public class TradeEditController {
     @FXML private TextField pictureField;
     @FXML private ComboBox<Resident> residentCombo;
     @FXML private Button saveButton;
+    @FXML private Label errorLabel;
 
     private TradeViewModel tradeViewModel;
     private Trade trade;
@@ -48,6 +49,7 @@ public class TradeEditController {
     @FXML
     private void initialize() {
         saveButton.setDisable(true);
+        errorLabel.setText("");
 
         titleField.textProperty().addListener((obs, oldVal, newVal) -> checkChanges());
         descriptionArea.textProperty().addListener((obs, oldVal, newVal) -> checkChanges());
@@ -60,7 +62,25 @@ public class TradeEditController {
     }
 
     private void checkChanges() {
-        saveButton.setDisable(titleField.getText().isEmpty());
+        boolean titleValid = !titleField.getText().trim().isEmpty();
+        boolean descValid = !descriptionArea.getText().trim().isEmpty();
+        boolean pointsValid = false;
+        
+        try {
+            int pts = Integer.parseInt(pointsField.getText().trim());
+            pointsValid = pts > 0;
+        } catch (NumberFormatException e) {
+            pointsValid = false;
+        }
+        
+        if (!titleValid || !descValid || !pointsValid) {
+            errorLabel.setText("Title, Description, and Points (>0) are required");
+            saveButton.setDisable(true);
+            return;
+        }
+        
+        errorLabel.setText("");
+        saveButton.setDisable(false);
     }
 
     @FXML
@@ -76,12 +96,7 @@ public class TradeEditController {
 
     @FXML
     private void onSave() {
-        int points = 0;
-        try {
-            points = Integer.parseInt(pointsField.getText());
-        } catch (NumberFormatException e) {
-            points = 0;
-        }
+        int points = Integer.parseInt(pointsField.getText().trim());
 
         int residentId = 0;
         Resident selectedResident = residentCombo.getSelectionModel().getSelectedItem();
@@ -92,18 +107,18 @@ public class TradeEditController {
         if (isNewTrade) {
             Trade newTrade = new Trade(
                 0,
-                titleField.getText(),
-                descriptionArea.getText(),
-                pictureField.getText(),
+                titleField.getText().trim(),
+                descriptionArea.getText().trim(),
+                pictureField.getText().trim(),
                 points,
                 residentId
             );
             tradeViewModel.addTrade(newTrade);
         } else {
-            trade.setTitle(titleField.getText());
-            trade.setDescription(descriptionArea.getText());
+            trade.setTitle(titleField.getText().trim());
+            trade.setDescription(descriptionArea.getText().trim());
             trade.setPointsCost(points);
-            trade.setPicturePath(pictureField.getText());
+            trade.setPicturePath(pictureField.getText().trim());
             trade.setResidentId(residentId);
             tradeViewModel.updateTrade(trade);
         }

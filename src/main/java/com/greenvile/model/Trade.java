@@ -1,3 +1,5 @@
+/* This one also kinda simple but not since we got now the Buyer ID. Basically on wedesday I noticed that the trade system was ass so I added logic to move the points from one person to another. But in short another class to instanciate objects. Its almost all that the model does for us, creates objects that we want to use in the app
+ */
 package com.greenvile.model;
 
 public class Trade {
@@ -7,6 +9,7 @@ public class Trade {
     private String picturePath;
     private int pointsCost;
     private int residentId;
+    private int buyerId;
     private boolean completed;
     private boolean displayOnWebsite;
 
@@ -17,6 +20,7 @@ public class Trade {
         this.picturePath = "";
         this.pointsCost = 0;
         this.residentId = 0;
+        this.buyerId = 0;
         this.completed = false;
         this.displayOnWebsite = true;
     }
@@ -28,6 +32,7 @@ public class Trade {
         this.picturePath = picturePath;
         this.pointsCost = pointsCost;
         this.residentId = residentId;
+        this.buyerId = 0;
         this.completed = false;
         this.displayOnWebsite = true;
     }
@@ -80,6 +85,14 @@ public class Trade {
         this.residentId = residentId;
     }
 
+    public int getBuyerId() {
+        return buyerId;
+    }
+
+    public void setBuyerId(int buyerId) {
+        this.buyerId = buyerId;
+    }
+
     public boolean isCompleted() {
         return completed;
     }
@@ -97,6 +110,12 @@ public class Trade {
     }
 
     public String toString() {
-        return title;
+        String status = "";
+        if (completed) {
+            status = " [COMPLETED]";
+        } else if (displayOnWebsite) {
+            status = " [ACTIVE]";
+        }
+        return title + " (" + pointsCost + " pts)" + status;
     }
 }

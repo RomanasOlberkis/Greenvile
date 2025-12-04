@@ -2,7 +2,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox spacing="10" xmlns:fx="http://javafx.com/fxml" fx:controller="com.greenvile.view.CommunalGoalEditController">
+<VBox spacing="10" xmlns:fx="http://javafx.com/fxml" fx:controller="com.greenvile.view.DefaultTaskEditController">
     <Label fx:id="errorLabel" style="-fx-text-fill: red;"/>
     <HBox spacing="10">
         <Label text="Title:*"/>
@@ -13,8 +13,8 @@
         <TextArea fx:id="descriptionArea" prefHeight="100"/>
     </VBox>
     <HBox spacing="10">
-        <Label text="Points Needed:"/>
-        <TextField fx:id="pointsNeededField" prefWidth="100"/>
+        <Label text="Points:"/>
+        <TextField fx:id="pointsField" prefWidth="100"/>
     </HBox>
     <HBox spacing="10">
         <Button fx:id="saveButton" text="Save" onAction="#onSave"/>

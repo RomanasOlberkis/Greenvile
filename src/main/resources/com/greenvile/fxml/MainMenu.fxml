@@ -8,5 +8,4 @@
     <Button text="Green Actions" onAction="#openGreenActions" prefWidth="200"/>
     <Button text="Communal Tasks" onAction="#openCommunal" prefWidth="200"/>
     <Button text="Trade" onAction="#openTrades" prefWidth="200"/>
-    <Button text="Point Management" onAction="#openPointManagement" prefWidth="200"/>
 </VBox>

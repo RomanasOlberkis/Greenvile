@@ -22,7 +22,6 @@ public class ResidentController {
 
     private MainViewModel mainViewModel;
     private ResidentViewModel residentViewModel;
-    private ObservableList<Resident> residentList;
 
     public void setMainViewModel(MainViewModel mainViewModel) {
         this.mainViewModel = mainViewModel;
@@ -40,21 +39,28 @@ public class ResidentController {
             updateButton.setDisable(!hasSelection);
             deleteButton.setDisable(!hasSelection);
         });
+
+        searchField.textProperty().addListener((obs, oldVal, newVal) -> {
+            filterResidents(newVal);
+        });
     }
 
     private void loadResidents() {
-        residentList = FXCollections.observableArrayList(residentViewModel.getResidentList());
-        residentListView.setItems(residentList);
+        ObservableList<Resident> residents = FXCollections.observableArrayList(residentViewModel.getResidentList());
+        residentListView.setItems(residents);
     }
 
-    @FXML
-    private void onSearch() {
-        String query = searchField.getText();
-        if (query.isEmpty()) {
+    private void filterResidents(String searchText) {
+        if (searchText == null || searchText.isEmpty()) {
             loadResidents();
         } else {
-            residentList = FXCollections.observableArrayList(residentViewModel.searchResidents(query));
-            residentListView.setItems(residentList);
+            ObservableList<Resident> filtered = FXCollections.observableArrayList();
+            for (Resident r : residentViewModel.getResidentList()) {
+                if (r.getFullName().toLowerCase().contains(searchText.toLowerCase())) {
+                    filtered.add(r);
+                }
+            }
+            residentListView.setItems(filtered);
         }
     }
 

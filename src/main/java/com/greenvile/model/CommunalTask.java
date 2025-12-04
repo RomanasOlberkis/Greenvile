@@ -1,5 +1,8 @@
 package com.greenvile.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CommunalTask {
     private int id;
     private String title;
@@ -7,6 +10,7 @@ public class CommunalTask {
     private int pointsAwarded;
     private boolean completed;
     private boolean displayOnWebsite;
+    private List<Integer> participantIds;
 
     public CommunalTask() {
         this.id = 0;
@@ -15,6 +19,7 @@ public class CommunalTask {
         this.pointsAwarded = 0;
         this.completed = false;
         this.displayOnWebsite = false;
+        this.participantIds = new ArrayList<>();
     }
 
     public CommunalTask(int id, String title, String description, int pointsAwarded) {
@@ -24,6 +29,7 @@ public class CommunalTask {
         this.pointsAwarded = pointsAwarded;
         this.completed = false;
         this.displayOnWebsite = false;
+        this.participantIds = new ArrayList<>();
     }
 
     public int getId() {
@@ -74,7 +80,35 @@ public class CommunalTask {
         this.displayOnWebsite = displayOnWebsite;
     }
 
+    public List<Integer> getParticipantIds() {
+        return participantIds;
+    }
+
+    public void setParticipantIds(List<Integer> participantIds) {
+        this.participantIds = participantIds;
+    }
+
+    public void addParticipant(int residentId) {
+        if (!participantIds.contains(residentId)) {
+            participantIds.add(residentId);
+        }
+    }
+
+    public void removeParticipant(int residentId) {
+        participantIds.remove(Integer.valueOf(residentId));
+    }
+
+    public boolean hasParticipants() {
+        return !participantIds.isEmpty();
+    }
+
     public String toString() {
-        return title;
+        String status = "";
+        if (completed) {
+            status = " [COMPLETED]";
+        } else if (displayOnWebsite) {
+            status = " [ACTIVE]";
+        }
+        return title + status;
     }
 }

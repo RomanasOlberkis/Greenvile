@@ -1,3 +1,4 @@
+/* this shit dumb af and I would prolly do smtg different in C# but fuck it. This is basically folder in a folder class because it the List<CommunalTasks> works kinda like a folder. Note that for now the task MUST BE SET AS ACTIVE FOR IT TO GET POINTS FROM GREEN ACTION*/
 package com.greenvile.model;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ public class CommunalGoal {
     private int pointsNeeded;
     private int currentPoints;
     private boolean completed;
+    private boolean active;
     private List<CommunalTask> tasks;
 
     public CommunalGoal() {
@@ -19,6 +21,7 @@ public class CommunalGoal {
         this.pointsNeeded = 0;
         this.currentPoints = 0;
         this.completed = false;
+        this.active = false;
         this.tasks = new ArrayList<>();
     }
 
@@ -29,6 +32,7 @@ public class CommunalGoal {
         this.pointsNeeded = pointsNeeded;
         this.currentPoints = 0;
         this.completed = false;
+        this.active = false;
         this.tasks = new ArrayList<>();
     }
 
@@ -84,6 +88,14 @@ public class CommunalGoal {
         this.completed = completed;
     }
 
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     public List<CommunalTask> getTasks() {
         return tasks;
     }
@@ -108,6 +120,14 @@ public class CommunalGoal {
     }
 
     public String toString() {
-        return title;
+        String status = "";
+        if (completed) {
+            status = " [COMPLETED]";
+        } else if (active) {
+            status = " [ACTIVE " + currentPoints + "/" + pointsNeeded + "]";
+        } else {
+            status = " [INACTIVE]";
+        }
+        return title + status;
     }
 }

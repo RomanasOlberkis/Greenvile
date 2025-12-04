@@ -1,3 +1,14 @@
+/* this shit holds all the lists. It is THE memory until its saved to file
+I suppose the get residents by Id is funny becasuse it has to go through 
+all Id's like a dumbass until it gets the correct one to work.
+I would take this and 2nd choice to write about because of all the aggregation
+This class does not inherit anything but contains pretty much everything (I know sounds dumb af and it will be till you move to C#)
+It also initializes the emptuy lists.
+Has a logic that allows us to have multiple people with same name(some call it a bug I call that shit a feature) 
+Coppy default tasks is fun cus it goes through the list
+because instead of coppying the default tasks it creates the new tasks under the goals 
+Also if your went through it this covers encapsulation (communalPointsPool)
+makes it so that the everthing else in the code must call this shit to modyfi the communal points*/
 package com.greenvile.model;
 
 import java.util.ArrayList;
@@ -8,7 +19,7 @@ public class DataManager {
     private List<GreenAction> greenActions;
     private List<CommunalGoal> communalGoals;
     private List<Trade> trades;
-    private PointSettings pointSettings;
+    private List<CommunalTask> defaultTasks;
     private int communalPointsPool;
 
     public DataManager() {
@@ -16,7 +27,7 @@ public class DataManager {
         this.greenActions = new ArrayList<>();
         this.communalGoals = new ArrayList<>();
         this.trades = new ArrayList<>();
-        this.pointSettings = new PointSettings();
+        this.defaultTasks = new ArrayList<>();
         this.communalPointsPool = 0;
     }
 
@@ -52,12 +63,12 @@ public class DataManager {
         this.trades = trades;
     }
 
-    public PointSettings getPointSettings() {
-        return pointSettings;
+    public List<CommunalTask> getDefaultTasks() {
+        return defaultTasks;
     }
 
-    public void setPointSettings(PointSettings pointSettings) {
-        this.pointSettings = pointSettings;
+    public void setDefaultTasks(List<CommunalTask> defaultTasks) {
+        this.defaultTasks = defaultTasks;
     }
 
     public int getCommunalPointsPool() {
@@ -112,6 +123,16 @@ public class DataManager {
         return maxId + 1;
     }
 
+    public int generateNewDefaultTaskId() {
+        int maxId = 0;
+        for (CommunalTask t : defaultTasks) {
+            if (t.getId() > maxId) {
+                maxId = t.getId();
+            }
+        }
+        return maxId + 1;
+    }
+
     public int generateNewTradeId() {
         int maxId = 0;
         for (Trade t : trades) {
@@ -129,5 +150,20 @@ public class DataManager {
             }
         }
         return null;
+    }
+
+    public List<CommunalTask> copyDefaultTasks(CommunalGoal goal) {
+        List<CommunalTask> copiedTasks = new ArrayList<>();
+        for (CommunalTask defaultTask : defaultTasks) {
+            CommunalTask newTask = new CommunalTask(
+                generateNewTaskId(goal),
+                defaultTask.getTitle(),
+                defaultTask.getDescription(),
+                defaultTask.getPointsAwarded()
+            );
+            copiedTasks.add(newTask);
+            goal.addTask(newTask);
+        }
+        return copiedTasks;
     }
 }

@@ -4,17 +4,17 @@ C:\Users\Roman\Desktop\Greenvile\src\main\java\com\greenvile\model\CommunalTask.
 C:\Users\Roman\Desktop\Greenvile\src\main\java\com\greenvile\model\DataManager.java
 C:\Users\Roman\Desktop\Greenvile\src\main\java\com\greenvile\model\GreenAction.java
 C:\Users\Roman\Desktop\Greenvile\src\main\java\com\greenvile\model\Person.java
-C:\Users\Roman\Desktop\Greenvile\src\main\java\com\greenvile\model\PointSettings.java
 C:\Users\Roman\Desktop\Greenvile\src\main\java\com\greenvile\model\Resident.java
 C:\Users\Roman\Desktop\Greenvile\src\main\java\com\greenvile\model\Trade.java
 C:\Users\Roman\Desktop\Greenvile\src\main\java\com\greenvile\util\FileHandler.java
 C:\Users\Roman\Desktop\Greenvile\src\main\java\com\greenvile\view\CommunalController.java
 C:\Users\Roman\Desktop\Greenvile\src\main\java\com\greenvile\view\CommunalGoalEditController.java
 C:\Users\Roman\Desktop\Greenvile\src\main\java\com\greenvile\view\CommunalTaskEditController.java
+C:\Users\Roman\Desktop\Greenvile\src\main\java\com\greenvile\view\DefaultTaskEditController.java
+C:\Users\Roman\Desktop\Greenvile\src\main\java\com\greenvile\view\DefaultTasksController.java
 C:\Users\Roman\Desktop\Greenvile\src\main\java\com\greenvile\view\GreenActionController.java
 C:\Users\Roman\Desktop\Greenvile\src\main\java\com\greenvile\view\GreenActionEditController.java
 C:\Users\Roman\Desktop\Greenvile\src\main\java\com\greenvile\view\MainMenuController.java
-C:\Users\Roman\Desktop\Greenvile\src\main\java\com\greenvile\view\PointManagementController.java
 C:\Users\Roman\Desktop\Greenvile\src\main\java\com\greenvile\view\ResidentController.java
 C:\Users\Roman\Desktop\Greenvile\src\main\java\com\greenvile\view\ResidentEditController.java
 C:\Users\Roman\Desktop\Greenvile\src\main\java\com\greenvile\view\TradeController.java
@@ -22,6 +22,5 @@ C:\Users\Roman\Desktop\Greenvile\src\main\java\com\greenvile\view\TradeEditContr
 C:\Users\Roman\Desktop\Greenvile\src\main\java\com\greenvile\viewmodel\CommunalViewModel.java
 C:\Users\Roman\Desktop\Greenvile\src\main\java\com\greenvile\viewmodel\GreenActionViewModel.java
 C:\Users\Roman\Desktop\Greenvile\src\main\java\com\greenvile\viewmodel\MainViewModel.java
-C:\Users\Roman\Desktop\Greenvile\src\main\java\com\greenvile\viewmodel\PointManagementViewModel.java
 C:\Users\Roman\Desktop\Greenvile\src\main\java\com\greenvile\viewmodel\ResidentViewModel.java
 C:\Users\Roman\Desktop\Greenvile\src\main\java\com\greenvile\viewmodel\TradeViewModel.java
