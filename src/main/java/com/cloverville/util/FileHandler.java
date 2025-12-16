@@ -66,11 +66,14 @@ public class FileHandler {
                     t.isCompleted() + "|" + t.isDisplayOnWebsite() + "|" + t.getBuyerId());
             }
             writer.println("END_TRADES");
-            
+            writer.println("LAST_RESET");
+            writer.println(data.getLastResetMonth());
+            writer.println("END_LAST_RESET");
             writer.close();
         } catch (IOException e) {
             System.out.println("Error saving data: " + e.getMessage());
         }
+
     }
 
     private int parseIntSafe(String s) {
@@ -238,7 +241,15 @@ public class FileHandler {
                         }
                         data.getTrades().add(t);
                     }
+                } 
+                    else if (line.equals("LAST_RESET")) {
+                    section = "LAST_RESET";
+                    String resetLine = reader.readLine();
+                    if (resetLine != null && !resetLine.startsWith("END_")) {
+                        data.setLastResetMonth(resetLine.trim());
+                    }
                 }
+                
             }
             reader.close();
         } catch (IOException e) {

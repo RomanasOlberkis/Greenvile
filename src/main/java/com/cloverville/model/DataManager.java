@@ -21,6 +21,7 @@ public class DataManager {
     private List<Trade> trades;
     private List<CommunalTask> defaultTasks;
     private int communalPointsPool;
+    private String lastResetMonth;
 
     public DataManager() {
         this.residents = new ArrayList<>();
@@ -29,6 +30,7 @@ public class DataManager {
         this.trades = new ArrayList<>();
         this.defaultTasks = new ArrayList<>();
         this.communalPointsPool = 0;
+        this.lastResetMonth = "";
     }
 
     public List<Resident> getResidents() {
@@ -81,6 +83,13 @@ public class DataManager {
 
     public void addToCommunalPool(int points) {
         this.communalPointsPool += points;
+    }
+
+        public String getLastResetMonth() {
+        return lastResetMonth;
+    }
+      public void setLastResetMonth(String lastResetMonth) {
+        this.lastResetMonth = lastResetMonth;
     }
 
     public int generateNewResidentId() {

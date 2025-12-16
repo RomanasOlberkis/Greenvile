@@ -3,6 +3,7 @@ COMMUNAL_POOL
 END_COMMUNAL_POOL
 RESIDENTS
 1|a|a|a|a|0|
+2|asdas|asdasd|asdasd|asdasd|0|2025-12-16
 END_RESIDENTS
 GREEN_ACTIONS
 1|s|s||1|true|1
@@ -11,10 +12,13 @@ DEFAULT_TASKS
 1|s|s|1
 END_DEFAULT_TASKS
 COMMUNAL_GOALS
-GOAL|1|s|s|1|1|false|true
+GOAL|1|s|s|1|261|false|true
 TASK|1|s|s|1|false|true|
-TASK|2|s|s|2|false|true|1
+TASK|2|s|s|200|true|true|2
 END_COMMUNAL_GOALS
 TRADES
 1|s|s||1|1|false|true|0
 END_TRADES
+LAST_RESET
+2025-12
+END_LAST_RESET
