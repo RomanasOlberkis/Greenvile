@@ -245,11 +245,11 @@ body {
 }
 
 .overview-card p {
-    font-size: 18px;
-    line-height: 1.6;
+    font-size: 20px;      /* texto más grande */
+    font-weight: 600;     /* más gordito */
+    line-height: 1.7;     /* mejor lectura */
     color: #444;
 }
-
 /* -------------------------------------------------------
    FOOTER
 -------------------------------------------------------- */
@@ -289,5 +289,12 @@ body {
 
 .view-more:hover {
     text-decoration: underline;
+}
+.welcome-image {
+  width: 100%;
+  max-width: 500px;  
+  margin: 20px auto;  
+  display: block;
+  border-radius: 10px;
 }
 
