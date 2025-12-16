@@ -1,0 +1,39 @@
+{
+  "greenActions": [
+    {
+      "title": "s",
+      "description": "s",
+      "picture": ""
+    }
+  ],
+  "communalGoals": [
+    {
+      "title": "s",
+      "description": "s",
+      "pointsNeeded": 1,
+      "currentPoints": 1,
+      "completed": false,
+      "tasks": [
+        {
+          "title": "s",
+          "description": "s",
+          "completed": false
+        },
+        {
+          "title": "s",
+          "description": "s",
+          "completed": false
+        }
+      ]
+    }
+  ],
+  "trades": [
+    {
+      "title": "s",
+      "description": "s",
+      "picture": "",
+      "pointsCost": 1
+    }
+  ],
+  "communalPointsPool": 0
+}
