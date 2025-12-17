@@ -1,6 +1,4 @@
-/* -------------------------------------------------------
-   LOAD DATA FROM JSON FILE
--------------------------------------------------------- */
+/* LOAD DATA FROM JSON FILE */
 function loadData() {
 
     // Temporary loading messages
@@ -20,18 +18,14 @@ function loadData() {
         .catch(error => console.log("Error loading JSON:", error));
 }
 
-/* -------------------------------------------------------
-   DISPLAY ALL DATA IN THE DASHBOARD
--------------------------------------------------------- */
+/* DISPLAY ALL DATA IN THE DASHBOARD */
 function displayData(data) {
 
     /* Update communal points */
     var poolSpan = document.getElementById('communalPool');
     if (poolSpan) poolSpan.textContent = data.communalPointsPool;
 
-    /* =====================================================
-       GREEN ACTIONS (with View more)
-    ====================================================== */
+    /* GREEN ACTIONS (with View more) */
     var actionsDiv = document.getElementById('greenActions');
     if (actionsDiv) {
         actionsDiv.innerHTML = "";
@@ -74,9 +68,7 @@ function displayData(data) {
         }
     }
 
-    /* =====================================================
-       COMMUNAL GOALS
-    ====================================================== */
+    /* COMMUNAL GOALS */
     var goalsDiv = document.getElementById('communalGoals');
     if (goalsDiv) {
         goalsDiv.innerHTML = "";
@@ -104,9 +96,7 @@ function displayData(data) {
         }
     }
 
-    /* =====================================================
-       TRADES
-    ====================================================== */
+    /* TRADES */
     var tradesDiv = document.getElementById('trades');
     if (tradesDiv) {
         tradesDiv.innerHTML = "";
@@ -130,9 +120,7 @@ function displayData(data) {
         }
     }
 
-    /* =====================================================
-       COMMUNAL TASKS
-    ====================================================== */
+    /* COMMUNAL TASKS */
     var tasksDiv = document.getElementById('communalTasks');
     if (tasksDiv) {
     tasksDiv.innerHTML = "";
@@ -164,9 +152,7 @@ function displayData(data) {
 }
 }
 
-/* -------------------------------------------------------
-   TAB SWITCHING
--------------------------------------------------------- */
+/* TAB SWITCHING */
 function showTab(tabId, button) {
     document.querySelectorAll(".tab-content").forEach(tab => {
         tab.style.display = "none";
@@ -184,9 +170,7 @@ function showTab(tabId, button) {
     document.querySelector(".sidebar").style.display = "none";
 }
 
-/* -------------------------------------------------------
-   HAMBURGER MENU TOGGLE
--------------------------------------------------------- */
+/* HAMBURGER MENU TOGGLE */
 const menuToggle = document.querySelector(".menu-toggle");
 const sidebar = document.querySelector(".sidebar");
 
@@ -204,8 +188,6 @@ document.addEventListener("click", function (e) {
     }
 });
 
-/* -------------------------------------------------------
-   START PROGRAM
--------------------------------------------------------- */
+/* START PROGRAM */
 loadData();
 showTab('overview');
