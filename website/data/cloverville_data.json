@@ -1,38 +1,52 @@
 {
   "greenActions": [
     {
-      "title": "s",
-      "description": "s",
+      "title": "q",
+      "description": "q",
       "picture": ""
     }
   ],
   "communalGoals": [
     {
-      "title": "s",
-      "description": "s",
+      "title": "q",
+      "description": "q",
       "pointsNeeded": 1,
-      "currentPoints": 261,
+      "currentPoints": 0,
       "completed": false,
       "tasks": [
         {
-          "title": "s",
-          "description": "s",
+          "title": "w",
+          "description": "w",
+          "completed": false
+        }
+      ]
+    },
+    {
+      "title": "112",
+      "description": "q",
+      "pointsNeeded": 12,
+      "currentPoints": 0,
+      "completed": false,
+      "tasks": [
+        {
+          "title": "q",
+          "description": "q",
           "completed": false
         },
         {
-          "title": "s",
-          "description": "s",
-          "completed": true
+          "title": "e",
+          "description": "e",
+          "completed": false
         }
       ]
     }
   ],
   "trades": [
     {
-      "title": "s",
-      "description": "s",
+      "title": "q",
+      "description": "q",
       "picture": "",
-      "pointsCost": 1
+      "pointsCost": 12
     }
   ],
   "communalPointsPool": 0
